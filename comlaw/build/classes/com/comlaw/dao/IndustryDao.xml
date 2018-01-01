@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.comlaw.dao.IndustryDao">
+
+	<resultMap type="com.comlaw.bean.IndustryBean" id="industryBeanMap">
+
+		<result property="industryId" column="industry_id" />
+		<result property="industryName" column="industry_name" />
+
+	</resultMap>
+
+	<!-- ===========================add================================ -->
+
+	<insert id="saveIndustryBean" parameterType="com.comlaw.bean.IndustryBean">
+		insert into industry
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			
+			<if test="industryId != null" >industry_id,</if>
+			<if test="industryName != null">industry_name,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+		
+			<if test="industryId != null" >#{industryId},</if>
+			<if test="industryName != null">#{industryName},</if>
+		</trim>
+	</insert>
+
+	<select id="queryList" resultMap="industryBeanMap">
+		 select * 
+		 from 
+		 industry
+<!-- 		<where>
+			<trim prefixOverrides="and">
+				msgstatus ='-1'  
+ 				<![CDATA[ and ROWNUM<=100 ]]>
+			</trim>
+		</where>
+		order by storagetime asc -->
+	</select>
+	
+	
+	<!-- 处理之后把未处理(-1) 更新为 00-正常处理; 01-处理异常 -->
+	<update id="updateIndustryBean" parameterType="com.comlaw.bean.IndustryBean">
+	    update industry
+	    <trim prefix="set" suffixOverrides=",">
+			<if test="industryName != null">industry_name=#{industryName},</if>
+		</trim>
+		<where>
+			<if test="industryId != null">industry_id=#{industryId}</if>
+		</where>
+	
+	</update>
+	
+</mapper>
